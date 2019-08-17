@@ -89,6 +89,80 @@ ENDOFFILE
 
 }
 
+createJsonResponse(){
+cat > JsonResponse.java << ENDOFFILE
+import org.springframework.stereotype.Component;
+
+@Component
+public class JsonResponse {
+
+    private boolean status;
+    private Object result;
+    private String message;
+    private long count;
+
+    public JsonResponse(boolean status, Object result, String message, long count) {
+        this.status = status;
+        this.result = result;
+        this.message = message;
+        this.count = count;
+    }
+
+    public JsonResponse() {
+    }
+    public boolean getStatus() {
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    public Object getResult() {
+        return result;
+    }
+    public void setResult(Object result) {
+        this.result = result;
+    }
+    public long getCount() {
+        return count;
+    }
+    public void setCount(long count) {
+        this.count = count;
+    }
+    public String getMessage() {
+        return message;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+ENDOFFILE
+}
+
+createService(){
+cat > Service$name.java << ENDOFFILE
+import org.springframework.data.domain.Pageable;
+
+public interface Service$name {
+  $(for (( i=0; i<${#names[@]}; i++ ))
+  do
+      type=$(echo ${names[$i]} | cut -d' ' -f 1)
+      variable=$(echo ${names[$i]} | cut -d' ' -f 2)
+      if [ "$variable" = "id" ]
+      then 
+        echo "JsonResponse findById(String id);"        
+      fi
+  done
+  echo "JsonResponse create$name($name vehicle);"
+  echo "JsonResponse search$name(String searchParam, Pageable pageable);"
+  echo "JsonResponse list$name(Pageable pageable);"
+  echo "$name update$name($name model);"
+  )
+}
+ENDOFFILE
+}
+
 
 createModel
 createRepository
+createJsonResponse
+createService
