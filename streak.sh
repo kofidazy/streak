@@ -17,7 +17,7 @@ do
   fi
 done
 
-echo "Job complete!!!!"
+echo "********** Starting JOB **********"
 
 SAVEIFS=$IFS  
 IFS=$',' 
@@ -161,8 +161,12 @@ public interface Service$name {
 ENDOFFILE
 }
 
-
+echo "Creating Model..."
 createModel
+echo "Creating Repository..."
 createRepository
+echo "Creating JSON Model..."
 createJsonResponse
+echo "Creating Service..."
 createService
+echo "********** JOB COMPLETE!! **********"
