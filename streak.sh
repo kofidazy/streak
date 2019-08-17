@@ -18,6 +18,35 @@ do
 done
 
 echo "Job complete!!!!"
+
+SAVEIFS=$IFS  
+IFS=$',' 
+names=($props)
+IFS=$SAVEIFS
+
+createRepository(){
+cat > Repository$name.java << ENDOFFILE
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Repository
+public interface Repository$name extends MongoRepository<$name, Serializable> {
+    $(for (( i=0; i<${#names[@]}; i++ ))
+  do
+      type=$(echo ${names[$i]} | cut -d' ' -f 1)
+      variable=$(echo ${names[$i]} | cut -d' ' -f 2)
+      echo "$name findBy$variable(${names[$i]});"
+  done
+  )
+}
+
+ENDOFFILE
+}
+
+createModel(){
 cat > $name.java << ENDOFFILE
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -29,11 +58,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class $name{
 
 $(
-  SAVEIFS=$IFS  
-  IFS=$',' 
-  names=($props)
-  IFS=$SAVEIFS
-
   for (( i=0; i<${#names[@]}; i++ ))
   do
       type=$(echo ${names[$i]} | cut -d' ' -f 1)
@@ -46,7 +70,7 @@ $(
         echo "private ${names[$i]};"
       fi
   done
-  
+
   for (( i=0; i<${#names[@]}; i++ ))
   do
       type=$(echo ${names[$i]} | cut -d' ' -f 1)
@@ -62,3 +86,9 @@ $(
 
 }
 ENDOFFILE
+
+}
+
+
+createModel
+createRepository
