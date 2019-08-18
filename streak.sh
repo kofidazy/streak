@@ -290,17 +290,28 @@ do
   variable=$(echo ${names[$i]} | cut -d' ' -f 2)
   if [ "$variable" = "id" ]
   then 
-    echo "  
-    private JsonResponse findById(String id){  
-      Optional<$name> res = Optional.ofNullable(${name,}Repository.findById(id));
-      return Validation.check(res, Messages.Success, Messages.Failed);
-    } "       
-  fi
+echo "  
+private JsonResponse findById(String id){  
+  Optional<$name> res = Optional.ofNullable(${name,}Repository.findById(id));
+  return Validation.check(res, Messages.Success, Messages.Failed);
+} "       
+fi
 done
-    echo "JsonResponse create$name($name ${name,});"
-    echo "JsonResponse search$name(String searchParam, Pageable pageable);"
-    echo "JsonResponse list$name(Pageable pageable);"
-    echo "$name update$name($name ${name,});"
+echo "
+private JsonResponse create$name($name ${name,}){
+  Optional<$name> res = Optional.ofNullable(${name,}Repository.save(${name,}));
+  return Validation.check(res, Messages.Success, Messages.Failed);
+}"
+echo "
+private JsonResponse list$name(Pageable pageable){
+  Page<$name> res = ${name,}Repository.findAll(pageable);
+  return Json.good(Messages.Success, res);
+}"
+echo "
+private $name update$name($name ${name,}){
+  Optional<$name> res = Optional.ofNullable(${name,}Repository.save(${name,}));
+  return Validation.check(res, Messages.Success, Messages.Failed);
+}"
 )
 
 
@@ -323,4 +334,4 @@ echo "Creating ServiceInterface..."
 createService
 echo "Creating Service"
 createServiceImpl
-echo "********** JOB COMPLETE!! **********"
+echo "********** Job Complete!! **********"
