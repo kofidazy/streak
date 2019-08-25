@@ -179,7 +179,7 @@ createService(){
 cat > $name/${name}Service.java << ENDOFFILE
 import org.springframework.data.domain.Pageable;
 
-public interface Service$name {
+public interface ${name}Service {
 $(
 for (( i=0; i<${#names[@]}; i++ ))
 do
@@ -193,7 +193,7 @@ done
 echo "JsonResponse create$name($name ${name,});"
 echo "JsonResponse search$name(String searchParam, Pageable pageable);"
 echo "JsonResponse list${name}s(Pageable pageable);"
-echo "$name update$name($name ${name,});"
+echo "JsonResponse update$name($name ${name,});"
 )
 }
 ENDOFFILE
@@ -345,24 +345,24 @@ do
   if [ "$variable" = "id" ]
   then 
 echo "  
-private JsonResponse findById(String id){  
+public JsonResponse findById(String id){  
   Optional<$name> res = Optional.ofNullable(${name,}Repository.findById(id));
   return Validation.check(res, Messages.Success, Messages.Failed);
 } "       
 fi
 done
 echo "
-private JsonResponse create$name($name ${name,}){
+public JsonResponse create$name($name ${name,}){
   Optional<$name> res = Optional.ofNullable(${name,}Repository.save(${name,}));
   return Validation.check(res, Messages.Success, Messages.Failed);
 }"
 echo "
-private JsonResponse list${name}s(Pageable pageable){
+public JsonResponse list${name}s(Pageable pageable){
   Page<$name> res = ${name,}Repository.findAll(pageable);
   return Json.good(Messages.Success, res);
 }"
 echo "
-private $name update$name($name ${name,}){
+public JsonResponse update$name($name ${name,}){
   Optional<$name> res = Optional.ofNullable(${name,}Repository.save(${name,}));
   return Validation.check(res, Messages.Success, Messages.Failed);
 }"
