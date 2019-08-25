@@ -192,7 +192,7 @@ do
 done
 echo "JsonResponse create$name($name ${name,});"
 echo "JsonResponse search$name(String searchParam, Pageable pageable);"
-echo "JsonResponse list$name(Pageable pageable);"
+echo "JsonResponse list${name}s(Pageable pageable);"
 echo "$name update$name($name ${name,});"
 )
 }
@@ -221,6 +221,60 @@ public class Validation {
             return Json.bad(badMessage);
         }
     }
+}
+ENDOFFILE
+}
+
+createController(){
+cat > $name/${name}Controller.java << ENDOFFILE
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.RequestEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+
+@RestController
+@RequestMapping(value = "/public/${name,}")
+public class ${name}Controller {
+
+private final Logger logger = LoggerFactory.getLogger(${name}Controller.class);
+
+@Autowired
+private final ${name}Service ${name,}Service;
+
+public ${name}Controller(${name}Service ${name,}Service) {
+        this.${name,}Service = ${name,}Service;
+        }
+
+@RequestMapping(value = "/save")
+    Object save${name}(RequestEntity<${name}> requestEntity) {
+        logger.info("${name} created -> ", requestEntity.getBody().toString());
+        return ${name,}Service.create${name}(requestEntity.getBody());
+        }
+
+@RequestMapping(value = "/{id}")
+    Object find${name}(@PathVariable String id) {
+        return ${name,}Service.findById(id);
+        }
+
+@RequestMapping(value = "/list")
+    Object list(RequestEntity<HashMap<String, Object>> requestEntity) {
+        logger.info("Request ---> ", requestEntity.getBody().toString());
+        HashMap<String, Object> req = requestEntity.getBody();
+        return ${name,}Service.list${name}s(new PageRequest(
+        (Integer) req.get("page"),
+        (Integer) req.get("size"),
+        new Sort(Sort.Direction.DESC, "lastModified")));
+        }
 }
 ENDOFFILE
 }
@@ -303,7 +357,7 @@ private JsonResponse create$name($name ${name,}){
   return Validation.check(res, Messages.Success, Messages.Failed);
 }"
 echo "
-private JsonResponse list$name(Pageable pageable){
+private JsonResponse list${name}s(Pageable pageable){
   Page<$name> res = ${name,}Repository.findAll(pageable);
   return Json.good(Messages.Success, res);
 }"
@@ -334,4 +388,6 @@ echo "Creating ServiceInterface..."
 createService
 echo "Creating Service"
 createServiceImpl
+echo "Creating Controller"
+createController
 echo "********** Job Complete!! **********"
