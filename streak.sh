@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 database="mongo"
 declare -a props
 endofprops=false
