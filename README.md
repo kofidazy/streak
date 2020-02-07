@@ -8,5 +8,6 @@ Streak allows users to generate a full Spring API from the command line.
 - Finish by typing `end` and press enter
 - Viola
 
+![](images/screen.png)
 
 *NB* Recommend running in `https://repl.it/languages/bash` online environment for now to overcome `bad substitution bug`. Fix incoming (online app too).
