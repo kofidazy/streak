@@ -79,8 +79,8 @@ $(
       variable=$(echo ${names[$i]} | cut -d' ' -f 2)
       
  
-      echo "private $type get${variable^}() { return $variable; }"
-      echo "private void set${variable^}(${names[$i]}) { this.$variable = $variable; }"
+      echo "public $type get${variable^}() { return $variable; }"
+      echo "public void set${variable^}(${names[$i]}) { this.$variable = $variable; }"
 
   done
 
