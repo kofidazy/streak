@@ -1,9 +1,13 @@
 #!/bin/bash
+
+# Configuration variables for the script methods to use
 database="mongo"
 declare -a props
 endofprops=false
 property_regex='^/s.+;$'
 
+
+# Class creation, prompt only terminates when the user types end and presses enter
 read -p "Name your model example (Student): " name
 
 until [ "$endofprops" = true ]
@@ -26,6 +30,7 @@ IFS=$','
 names=($props)
 IFS=$SAVEIFS
 
+# Method for creating spring data repository interface
 createRepository(){
 cat > $name/${name}Repository.java << ENDOFFILE
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -48,6 +53,11 @@ done
 ENDOFFILE
 }
 
+
+
+
+
+# Method for creating model class
 createModel(){
 cat > $name/$name.java << ENDOFFILE
 import org.springframework.data.annotation.CreatedDate;
@@ -91,6 +101,12 @@ ENDOFFILE
 
 }
 
+
+
+
+# Method for creating a json model for using with the api, this is a bonus class 
+# to make api interactions and message interpretations easier for the user. You can replace with 
+# whatever model works best for you
 createJsonResponse(){
 cat > $name/JsonResponse.java << ENDOFFILE
 import org.springframework.stereotype.Component;
@@ -140,6 +156,11 @@ public class JsonResponse {
 ENDOFFILE
 }
 
+
+
+
+
+# Method for creating the builder for the previously created json helper 
 createJsonBuilder(){
 cat > $name/JsonResponseBuilder.java << ENDOFFILE
 public class JsonResponseBuilder {
@@ -175,6 +196,11 @@ public class JsonResponseBuilder {
 ENDOFFILE
 }
 
+
+
+
+
+# Method for creating the service interface for the model
 createService(){
 cat > $name/${name}Service.java << ENDOFFILE
 import org.springframework.data.domain.Pageable;
@@ -199,6 +225,11 @@ echo "JsonResponse update$name($name ${name,});"
 ENDOFFILE
 }
 
+
+
+
+# Enum messages to be used by the json helper object,
+# add or replace with your own status messages
 createEnum(){
 cat > $name/Messages.java << ENDOFFILE
 public enum Messages{
@@ -208,6 +239,10 @@ public enum Messages{
 ENDOFFILE
 }
 
+
+
+
+# Method creates a validation utility class
 createValidation(){
 cat > $name/Validation.java << ENDOFFILE
 import java.util.Optional;
@@ -225,6 +260,10 @@ public class Validation {
 ENDOFFILE
 }
 
+
+
+
+# Method creates the controller for the model
 createController(){
 cat > $name/${name}Controller.java << ENDOFFILE
 import org.slf4j.Logger;
@@ -279,6 +318,11 @@ public ${name}Controller(${name}Service ${name,}Service) {
 ENDOFFILE
 }
 
+
+
+
+
+# Methods creates class for Json helper
 createJson(){
 cat > $name/Json.java << ENDOFFILE
 
@@ -327,6 +371,11 @@ public class Json {
 ENDOFFILE
 }
 
+
+
+
+
+# Method implements the previously created model service
 createServiceImpl(){
 cat > $name/${name}ServiceImpl.java << ENDOFFILE
 import org.springframework.data.domain.Pageable;
