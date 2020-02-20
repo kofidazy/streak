@@ -5,7 +5,7 @@ Streak allows users to generate a full Spring API from the command line.
 - Download the `streak.sh` bash script to your computer.
 - Run the script `./streak.sh`.
 - Create the api model by adding each Model property like below
-![](images/screen.png)
+![](images/streak.gif)
 - Finish by typing `end` and press enter
 - Viola
 
