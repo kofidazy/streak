@@ -12,4 +12,4 @@ Streak allows users to generate a full Spring API from the command line.
 - Viola
 
 
-*NB* Recommend running in [repl.it Bash Environment](https://repl.it/languages/bash) online environment for now to overcome `bad substitution bug`. Fix incoming (online app too).
+*NB* Currently works fine in the Debian Ubuntu bash/ash environment, Recommend running in [repl.it Bash Environment](https://repl.it/languages/bash) online environment for now to overcome `bad substitution bug` for OSx and Windows users facing  issues. Fix incoming (online app too).
